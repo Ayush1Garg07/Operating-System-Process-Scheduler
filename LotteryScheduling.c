@@ -60,6 +60,3 @@ void LotteryScheduling(Process *jobs, int n)
     }
 }
 
-
-
-
