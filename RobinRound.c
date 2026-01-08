@@ -1,58 +1,13 @@
 #include <stdio.h>
 #include <limits.h>
+#include "Queue.h"
+#include "Process.h"
 
 #define MAX 100
 
-typedef struct {
-    int data[MAX];
-    int front;
-    int rear;
-} Queue;
 
-typedef struct 
-{
-    int pid;
-    int arrival_time;
-    int burst_time;
-    int waiting_time;
-    int turnaround_time;
-    int response_time;
-    int completion_time;
-}RRjobs;
 
-void initQueue(Queue *q) {
-    q->front = q->rear = -1;
-}
-
-int isEmpty(Queue *q) {
-    return q->front == -1;
-}
-
-void enqueue(Queue *q, int value) {
-    if (q->rear == MAX - 1) {
-        printf("Queue Overflow\n");
-        return;
-    }
-    if (isEmpty(q))
-        q->front = 0;
-    q->rear++;
-    q->data[q->rear] = value;
-}
-
-int dequeue(Queue *q) {
-    if (isEmpty(q)) {
-        printf("Queue Underflow\n");
-        return -1;
-    }
-    int val = q->data[q->front];
-    if (q->front == q->rear)
-        q->front = q->rear = -1;
-    else
-        q->front++;
-    return val;
-}
-
-void RobinRound(RRjobs jobs[], int k)
+void Round_Robin(Process *jobs, int k)
 {
     Queue q;
     initQueue(&q);
@@ -107,7 +62,7 @@ void RobinRound(RRjobs jobs[], int k)
         
         for(int i=0; i<k; i++)
         {
-            if(jobs[i].arrival_time <= time && !visited)
+            if(jobs[i].arrival_time <= time && !visited[i])
             {
                 enqueue(&q, i);
                 visited[i] = 1;
@@ -124,32 +79,5 @@ void RobinRound(RRjobs jobs[], int k)
             jobs[idx].waiting_time = jobs[idx].turnaround_time - jobs[idx].burst_time;
         }
 
-    }
-    
-    printf("\nPID\tAT\tBT\tCT\tTAT\tWT\tRT\n");
-    for (int i = 0; i < k; i++) {
-        printf("P%d\t%d\t%d\t%d\t%d\t%d\t%d\n", jobs[i].pid, jobs[i].arrival_time, jobs[i].burst_time,
-        jobs[i].completion_time, jobs[i].turnaround_time, jobs[i].waiting_time, jobs[i].response_time);
     }           
-    
-
-}
-
-int main()
-{
-    int k;
-    printf("Enter the number of jobs: ");
-    scanf("%d", &k);
-
-    RRjobs jobs[k];
-
-    for(int i=0; i<k; i++)
-    {
-        printf("Enter the arrival time and burst time of job %d: ", i);
-        scanf("%d %d", &jobs[i].arrival_time, &jobs[i].burst_time);
-        jobs[i].pid = i;
-    }
-
-    RobinRound(jobs, k);
-    return 0;
 }

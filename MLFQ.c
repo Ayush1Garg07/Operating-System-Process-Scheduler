@@ -1,69 +1,10 @@
 #include <stdio.h>
 #include <limits.h>
 #include <stdbool.h>
+#include "Queue.h"
+#include "Process.h"
 
 #define MAX 100
-
-typedef struct 
-{
-    int data[MAX];
-    int front;
-    int rear;
-}Queue;
-
-void initQueue(Queue* q)
-{
-    q->front = q->rear = -1;
-}
-
-int isEmpty(Queue* q)
-{
-    return q->front==-1;
-}
-
-void enqueue(Queue* q, int val)
-{
-    if(q->rear == MAX - 1)
-    {
-        printf("Overflow");
-        return;
-    }
-    if(isEmpty(q)) q->front = 0;
-
-    q->rear++;
-    q->data[q->rear] = val;
-}
-
-int dequeue(Queue* q)
-{
-    if(isEmpty(q)){
-        printf("Queue Underflow");
-        return -1;
-    }
-    int value= q->data[q->front];
-    if(q->front == q->rear)
-    {
-        q->front = q->rear = -1;
-    }
-    else q->front++;
-    return value;
-}
-
-typedef struct 
-{
-    int pid;
-    int arrival_time;
-    int burst_time;
-    int comp_time;
-    int wait_time;
-    int remaining_time;
-    int turnaround_time;
-    int response_time;
-    int completion_time;
-    int start_time;
-    int queue_level;
-    bool is_completed ;
-}MLFQ;
 
 int min(int a, int b)
 {
@@ -72,7 +13,7 @@ int min(int a, int b)
 }
 
 
-void MultiLevelFeedbackQueue(MLFQ jobs[], int k)
+void MultiLevelFeedbackQueue(Process *jobs, int k)
 {
     Queue q1,q2,q3;
     initQueue(&q1);
@@ -111,7 +52,7 @@ void MultiLevelFeedbackQueue(MLFQ jobs[], int k)
             continue;
         }
 
-        MLFQ *p = &jobs[idx];
+        Process *p = &jobs[idx];
         int runtime = min(p->remaining_time, quantum[level]);
         
         if(p->start_time == -1){
@@ -137,7 +78,7 @@ void MultiLevelFeedbackQueue(MLFQ jobs[], int k)
         if(p->remaining_time == 0){
             p->completion_time = time;
             p->turnaround_time = p->completion_time - p->arrival_time;
-            p->wait_time = p->turnaround_time - p->burst_time;
+            p->waiting_time = p->turnaround_time - p->burst_time;
             p->is_completed = true;
             completed++;
         }
@@ -147,32 +88,7 @@ void MultiLevelFeedbackQueue(MLFQ jobs[], int k)
         }
 
     }
-
-    printf("\nPID\tAT\tBT\tCT\tTAT\tWT\tRT\n");
-    for (int i = 0; i < k; i++) {
-        printf("P%d\t%d\t%d\t%d\t%d\t%d\t%d\n", jobs[i].pid, jobs[i].arrival_time, jobs[i].burst_time,
-               jobs[i].completion_time, jobs[i].turnaround_time, jobs[i].wait_time, jobs[i].response_time);
-    }
 }
 
-int main()
-{
-    int n;
-    scanf("%d", &n);
 
-    MLFQ jobs[n];
 
-    for(int i=0; i<n; i++)
-    {
-        printf("Enter the arrival time and burst time for job %d: ", i);
-        scanf("%d %d", &jobs[i].arrival_time, &jobs[i].burst_time);
-        jobs[i].remaining_time = jobs[i].burst_time;
-        jobs[i].start_time = -1;
-        jobs[i].is_completed = false;
-        jobs[i].pid = i;
-    }
-
-    MultiLevelFeedbackQueue(jobs, n);
-
-    return 0;
-}

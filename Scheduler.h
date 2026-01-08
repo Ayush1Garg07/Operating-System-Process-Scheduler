@@ -3,7 +3,7 @@
 
 #include "process.h"
 
-void FCFS(Process *p, int main);
+void FCFS(Process *p, int n);
 void shortestJobFirst(Process *p, int n);
 void ShortestRemainingtimefirst(Process *p, int n);
 void Round_Robin(Process *p, int n, int k);
