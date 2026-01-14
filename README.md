@@ -205,35 +205,32 @@ Create a `Makefile` for easier compilation:
 
 ```makefile
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
+CFLAGS = -Wall -Iinclude
+OBJDIR = obj
+SRCDIR = src
 
-all: fcfs sjf srtf rr lottery mlfq scheduler
+OBJS = $(OBJDIR)/main.o \
+       $(OBJDIR)/Queue.o \
+       $(OBJDIR)/stats.o \
+       $(OBJDIR)/FirstComeFirstServe.o \
+       $(OBJDIR)/ShortestJobFirst.o \
+       $(OBJDIR)/ShortestRemainingtimefirst.o \
+       $(OBJDIR)/RobinRound.o \
+       $(OBJDIR)/LotteryScheduling.o \
+       $(OBJDIR)/MultiLevelFeedbackQueue.o
 
-fcfs: FirstComeFirstServe.c
-	$(CC) $(CFLAGS) -o fcfs FirstComeFirstServe.c
+TARGET = scheduler
 
-sjf: ShortestJobFirst.c
-	$(CC) $(CFLAGS) -o sjf ShortestJobFirst.c
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET)
 
-srtf: ShortestRemainingtimefirst.c
-	$(CC) $(CFLAGS) -o srtf ShortestRemainingtimefirst.c
-
-rr: RobinRound.c
-	$(CC) $(CFLAGS) -o rr RobinRound.c
-
-lottery: LotteryScheduling.c
-	$(CC) $(CFLAGS) -o lottery LotteryScheduling.c
-
-mlfq: MLFQ.c
-	$(CC) $(CFLAGS) -o mlfq MLFQ.c
-
-scheduler: main.c Scheduler.c
-	$(CC) $(CFLAGS) -o scheduler main.c Scheduler.c
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f fcfs sjf srtf rr lottery mlfq scheduler *.o
+	rm -rf $(OBJDIR)/*.o $(TARGET)
 
-.PHONY: all clean
 ```
 
 ## 📖 Usage Examples
@@ -545,7 +542,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - GitHub: [@Ayush1Garg07](https://github.com/Ayush1Garg07)
 - LinkedIn: [Connect with me](https://linkedin.com/in/ayush-garg-34896228a) <!-- Add your LinkedIn -->
-- Email: your.email@example.com <!-- Add your email -->
+- Email: ayush.garg1528@gmail.com <!-- Add your email -->
 
 ## 🙏 Acknowledgments
 
