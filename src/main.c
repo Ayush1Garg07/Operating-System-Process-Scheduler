@@ -31,17 +31,40 @@ int main() {
     switch (choice) {
         case 1: FCFS(p, n); 
         print_process_table(p,n);
+        print_average_times(p, n);
         break;
         
-        case 2: shortestJobFirst(p, n); break;
-        case 3: ShortestRemainingtimefirst(p, n); break;
+        case 2: shortestJobFirst(p, n); 
+        print_process_table(p,n);
+        print_average_times(p, n);
+        break;
+
+        case 3: ShortestRemainingtimefirst(p, n); 
+        print_process_table(p,n);
+        print_average_times(p, n);
+        break;
+
         case 4:
             printf("Quantum: ");
             scanf("%d", &quantum);
             Round_Robin(p, n, quantum);
+            print_process_table(p,n);
+            print_average_times(p, n);
             break;
-        case 5: MultiLevelFeedbackQueue(p, n); break;
-        case 6: LotteryScheduling(p, n); break;
+
+        case 5: MultiLevelFeedbackQueue(p, n); 
+        print_process_table(p,n);
+        print_average_times(p, n);
+        break;
+
+        case 6: LotteryScheduling(p, n); 
+        print_process_table(p,n);
+        print_average_times(p, n);
+        break;
+
+        default: 
+        printf("Wrong Input!.....");
+        break;
     }
 
     return 0;
